@@ -1,0 +1,46 @@
+server:
+  port: 8091
+
+ignite:
+  dataStorageConfiguration:
+    defaultDataRegionConfiguration:
+      persistenceEnabled: false
+
+spring:
+  ignite:
+    dataStorageConfiguration:
+      defaultDataRegionConfiguration:
+        persistenceEnabled: false
+    client-mode: true
+    configuration:
+      igniteInstanceName: igniteInstance
+      discoverySpi:
+        ipFinder:
+          addresses:
+  # https://ignite-service.cn/doc/2.7.0/sql/JDBC.html#_1-1-jdbc-thin%E6%A8%A1%E5%BC%8F%E9%A9%B1%E5%8A%A8
+  # 配置，支持账密、池化、多端点、集群、重连、ssl以及各类策略配置
+  datasource:
+    url: jdbc:ignite:thin://127.0.0.1/;threadPoolSize=100;idleTimeout=10000;
+    driver-class-name: org.apache.ignite.IgniteJdbcThinDriver
+    type: com.zaxxer.hikari.HikariDataSource
+    initialSize: 20
+    minIdle: 20
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    validationQuery: SELECT 1
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    filters: stat
+
+mybatis:
+  mapper-locations: classpath:/mybatis/mapper/ignite/*.xml
+  config-location:  classpath:/mybatis/config/mybatis-config.xml
+
+logging:
+  level:
+    root: info
+  config: classpath:logback-spring.xml

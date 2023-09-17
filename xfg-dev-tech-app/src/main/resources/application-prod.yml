@@ -1,0 +1,63 @@
+server:
+  port: 8091
+
+ignite:
+  dataStorageConfiguration:
+    defaultDataRegionConfiguration:
+      persistenceEnabled: false
+
+spring:
+  ignite:
+    dataStorageConfiguration:
+      defaultDataRegionConfiguration:
+        persistenceEnabled: false
+    client-mode: true
+    configuration:
+      igniteInstanceName: igniteInstance
+      discoverySpi:
+        ipFinder:
+          addresses:
+  # https://ignite-service.cn/doc/2.7.0/sql/JDBC.html#_1-1-jdbc-thin%E6%A8%A1%E5%BC%8F%E9%A9%B1%E5%8A%A8
+  # 配置，支持账密、池化、多端点、集群、重连、ssl以及各类策略配置
+  ignite.datasource:
+    url: jdbc:ignite:thin://127.0.0.1/;threadPoolSize=50;idleTimeout=60000;
+    driver-class-name: org.apache.ignite.IgniteJdbcThinDriver
+    type: com.zaxxer.hikari.HikariDataSource
+    initialSize: 50
+    minIdle: 50
+    maxActive: 50
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    validationQuery: SELECT 1
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    filters: stat
+
+  mysql.datasource:
+    url: jdbc:mysql://localhost:13306/road_map?useSSL=false&serverTimezone=UTC
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    initial-size: 20
+    min-idle: 20
+    max-active: 20
+    max-wait: 60000
+    time-between-eviction-runs-millis: 60000
+    min-evictable-idle-time-millis: 300000
+    validation-query: SELECT 1
+    test-while-idle: true
+    test-on-borrow: false
+    test-on-return: false
+    pool-prepared-statements: true
+    max-pool-prepared-statement-per-connection-size: 20
+    filters: stat,wall,log4j2
+    connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+
+logging:
+  level:
+    root: info
+  config: classpath:logback-spring.xml
